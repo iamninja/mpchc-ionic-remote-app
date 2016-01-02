@@ -1,14 +1,19 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $http) {
+.controller('DashCtrl', function($scope, $http, DevelopApi) {
   // Settings
   ipAddress = '192.168.2.2';
   port = '13579';
-  urlCommand = 'http://' + ipAddress + ':' + port +'/command.html';
+  // For development only
+  baseUrl = DevelopApi.url;
+  // baseUrl = 'http://' + ipAddress + ':' + port;
+  urlCommand = baseUrl + '/command.html';
+  urlVariables = baseUrl + '/variables.html';
 
   $scope.data = {
     volume: 80,
   };
+
 
   // Execute POST commands
   $scope.sendCommand = function(command, extra, extraValue) {
@@ -27,6 +32,7 @@ angular.module('starter.controllers', [])
     });
   };
 
+  // Volume control
   $scope.increaseVolume = function(value) {
     if (($scope.data.volume + value) > 100) {
       return;
@@ -53,10 +59,6 @@ angular.module('starter.controllers', [])
     });
     console.log(volume);
     console.log($scope.data.volume);
-  };
-
-  getVolumeLevel = function() {
-
   };
 })
 

@@ -23,6 +23,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
+// Develop only. CORS related
+.constant('DevelopApi', {
+  url: 'http://localhost:8100/variables.html'
+})
+
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -81,5 +86,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
-
 });

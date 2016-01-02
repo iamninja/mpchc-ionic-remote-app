@@ -1,4 +1,10 @@
 {
   "name": "mphCont",
-  "app_id": ""
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/variables.html",
+      "proxyUrl": "http://192.168.2.2:13579/variables.html"
+    }
+  ]
 }
