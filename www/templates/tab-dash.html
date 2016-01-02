@@ -4,15 +4,15 @@
       <div class="item item-divider center-text">Playback</div>
       <div class="item item-body">
         <div class="row">
-          <button class="button icon ion-play col col-offset-20 col-20" ng-click="playback(887)"></button>
-          <button class="button icon ion-pause col col-20" ng-click="playback(888)"></button>
-          <button class="button icon ion-stop col col-20" ng-click="playback(890)"></button>
+          <button class="button icon ion-play col col-offset-20 col-20" ng-click="sendCommand(887)"></button>
+          <button class="button icon ion-pause col col-20" ng-click="sendCommand(888)"></button>
+          <button class="button icon ion-stop col col-20" ng-click="sendCommand(890)"></button>
         </div>
         <div class="row">
-          <button class="button icon ion-skip-backward col"></button>
-          <button class="button icon-left ion-chevron-left col">Slow</button>
-          <button class="button icon-right ion-chevron-right col">Fast</button>
-          <button class="button icon ion-skip-forward col"></button>
+          <button class="button icon ion-skip-backward col" ng-click="sendCommand(921)"></button>
+          <button class="button icon-left ion-chevron-left col" ng-click="sendCommand(894)">Slow</button>
+          <button class="button icon-right ion-chevron-right col" ng-click="sendCommand(895)">Fast</button>
+          <button class="button icon ion-skip-forward col" ng-click="sendCommand(922)"></button>
         </div>
       </div>
     </div>
@@ -20,8 +20,8 @@
      <div class="item item-divider center-text">Volume</div>
       <div class="item item-body">
         <div class="row">
-          <button class="button icon ion-plus col col-offset-25 col-25"></button>
-          <button class="button icon ion-minus col col-25"></button>
+          <button class="button icon ion-plus col col-offset-25 col-25" ng-click="sendCommand(907)"></button>
+          <button class="button icon ion-minus col col-25" ng-click="sendCommand(908)"></button>
         </div>
         <div class="item range">
           <i class="icon ion-volume-low"></i>
