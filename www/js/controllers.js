@@ -6,6 +6,10 @@ angular.module('starter.controllers', [])
   port = '13579';
   urlCommand = 'http://' + ipAddress + ':' + port +'/command.html';
 
+  $scope.data = {
+    volume: 80,
+  };
+
   // Execute POST commands
   $scope.sendCommand = function(command, extra, extraValue) {
     extra       = typeof extra !== 'undefined' ? extra : 'null';
@@ -21,6 +25,38 @@ angular.module('starter.controllers', [])
       data: 'wm_command=' + command + '&' + extra + '=' + extraValue,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     });
+  };
+
+  $scope.increaseVolume = function(value) {
+    if (($scope.data.volume + value) > 100) {
+      return;
+    };
+    $scope.data.volume = $scope.data.volume + value;
+    $scope.updateVolume($scope.data.volume);
+    console.log($scope.data.volume);
+  };
+  $scope.decreaseVolume = function(value) {
+    if (($scope.data.volume - value) < 0) {
+      return;
+    };
+    $scope.data.volume = $scope.data.volume - value;
+    $scope.updateVolume($scope.data.volume);
+    console.log($scope.data.volume);
+  };
+  $scope.updateVolume = function(volume) {
+    $scope.data.volume = parseInt(volume);
+    $http({
+      method: 'POST',
+      url: urlCommand,
+      data: 'wm_command=' + '-2' + '&' + 'volume' + '=' + volume,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    });
+    console.log(volume);
+    console.log($scope.data.volume);
+  };
+
+  getVolumeLevel = function() {
+
   };
 })
 
