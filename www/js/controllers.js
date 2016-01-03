@@ -106,6 +106,7 @@ angular.module('starter.controllers', [])
 
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
-    enableFriends: true
+    ipAddress: '',
+    port: '13579'
   };
 });
