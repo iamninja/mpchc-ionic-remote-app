@@ -5,14 +5,36 @@ angular.module('starter.controllers', [])
   ipAddress = '192.168.2.2';
   port = '13579';
   // For development only
-  baseUrl = DevelopApi.url;
-  // baseUrl = 'http://' + ipAddress + ':' + port;
+  // baseUrl = DevelopApi.url;
+  baseUrl = 'http://' + ipAddress + ':' + port;
   urlCommand = baseUrl + '/command.html';
   urlVariables = baseUrl + '/variables.html';
 
   $scope.data = {
-    volume: 80,
+    volume: 0,
   };
+
+  // Get volume level on controllers load
+  getVolumeLevel = function() {
+    $http({
+      method: 'POST',
+      url: urlVariables,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    .then(function successCallback(response) {
+      parser = new DOMParser();
+      doc = parser.parseFromString(response.data, 'text/html');
+      volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+      console.log('Start level: ' + volumeLevel);
+      $scope.data.volume = parseInt(volumeLevel);
+      return parseInt(volumeLevel);
+    }, function erroCallback(response){
+      console.log(response);
+    });
+  };
+  volumeLevel = getVolumeLevel();
 
 
   // Execute POST commands
@@ -60,6 +82,7 @@ angular.module('starter.controllers', [])
     console.log(volume);
     console.log($scope.data.volume);
   };
+
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
