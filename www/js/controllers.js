@@ -1,14 +1,17 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $http, DevelopApi) {
+.controller('DashCtrl', function($scope, $http, DevelopApi, Settings) {
   // Settings
-  ipAddress = '192.168.2.2';
-  port = '13579';
+  settings = Settings.settings;
+  ipAddress = settings.ipAddress;
+  port = settings.port;
   // For development only
   // baseUrl = DevelopApi.url;
   baseUrl = 'http://' + ipAddress + ':' + port;
   urlCommand = baseUrl + '/command.html';
   urlVariables = baseUrl + '/variables.html';
+
+  console.log(baseUrl);
 
   $scope.data = {
     volume: 0,
@@ -104,9 +107,7 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    ipAddress: '',
-    port: '13579'
-  };
+.controller('AccountCtrl', function($scope, $localstorage, Settings) {
+  $scope.settings = Settings.settings;
+  $localstorage.setObject('settings', $scope.settings);
 });
