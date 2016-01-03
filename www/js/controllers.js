@@ -1,7 +1,12 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $http, DevelopApi, Settings) {
+.controller('DashCtrl', function($scope, $http, DevelopApi, Settings, $localstorage) {
   // Settings
+  console.log($localstorage.settings);
+  if (typeof $localstorage.get('settings') !== 'undefined') {
+    console.log($localstorage.get('settings'));
+    Settings.settings = $localstorage.getObject('settings');
+  };
   settings = Settings.settings;
   ipAddress = settings.ipAddress;
   port = settings.port;
@@ -108,6 +113,13 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AccountCtrl', function($scope, $localstorage, Settings) {
+  if (typeof $localstorage.get('settings') !== 'undefined'){
+    Settings.settings = $localstorage.getObject('settings');
+  };
   $scope.settings = Settings.settings;
-  $localstorage.setObject('settings', $scope.settings);
+  $scope.saveChanges = function(settings) {
+    $localstorage.setObject('settings', settings);
+    Settings.settings = settings;
+    console.log(settings);
+  };
 });
