@@ -1,8 +1,7 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $http, DevelopApi, Settings, $localstorage) {
+.controller('DashCtrl', function($scope, $http, DevelopApi, Settings, $localstorage, $filter, $timeout, $q, GetVariables) {
   // Settings
-  console.log($localstorage.settings);
   if (typeof $localstorage.get('settings') !== 'undefined') {
     console.log($localstorage.get('settings'));
     Settings.settings = $localstorage.getObject('settings');
@@ -20,10 +19,11 @@ angular.module('starter.controllers', [])
 
   $scope.data = {
     volume: 0,
+    positionString: "",
   };
 
-  // Get volume level on controllers load
-  getVolumeLevel = function() {
+  // Get variables
+  getVariables = function() {
     $http({
       method: 'POST',
       url: urlVariables,
@@ -35,14 +35,100 @@ angular.module('starter.controllers', [])
       parser = new DOMParser();
       doc = parser.parseFromString(response.data, 'text/html');
       volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+      timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+      console.log(timeString);
       console.log('Start level: ' + volumeLevel);
       $scope.data.volume = parseInt(volumeLevel);
-      return parseInt(volumeLevel);
+      $scope.data.positionString = timeString;
     }, function erroCallback(response){
       console.log(response);
     });
   };
-  volumeLevel = getVolumeLevel();
+
+  // getVariables = function($q) {
+  //   return function() {
+  //     var defer = $q.defer();
+
+  //     $http({
+  //       method: 'POST',
+  //       url: urlVariables,
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //     })
+  //     .then(function successCallback(response) {
+  //       parser = new DOMParser();
+  //       doc = parser.parseFromString(response.data, 'text/html');
+  //       volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+  //       timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+  //       data = {
+  //         volume: volumeLevel,
+  //         positionString: timeString
+  //       };
+  //       defer.resolve(data);
+  //       console.log(timeString);
+  //       console.log('Start level: ' + volumeLevel);
+  //       // $scope.data.volume = parseInt(volumeLevel);
+  //       // $scope.data.positionString = timeString;
+
+  //     }, function erroCallback(response){
+  //       defer.reject(response);
+  //     });
+
+  //     return defer.promise;
+  //   }
+  // };
+
+  // function getVariables($q) {
+  //   return function() {
+  //     // simulated async function
+  //     return $q(function(resolve, reject) {
+  //       return $http({
+  //         method: 'POST',
+  //         url: urlVariables,
+  //         headers: {
+  //           'Content-Type': 'application/x-www-form-urlencoded',
+  //         },
+  //       })
+  //       .then(function successCallback(response) {
+          // parser = new DOMParser();
+          // doc = parser.parseFromString(response.data, 'text/html');
+          // volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+          // timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+          // data = {
+          //   volume: volumeLevel,
+          //   positionString: timeString
+          // };
+          // $scope.data = data;
+          // resolve(data);
+  //         // console.log(timeString);
+  //         // console.log('Start level: ' + volumeLevel);
+  //         // $scope.data.volume = parseInt(volumeLevel);
+  //         // $scope.data.positionString = timeString;
+
+  //       }, function erroCallback(response){
+  //         reject(response);
+  //       });
+  //     });
+  //   };
+  // };
+
+  // $http.get(urlVariables)
+  // .success(function successCallback(response) {
+  //   parser = new DOMParser();
+  //   doc = parser.parseFromString(response.data, 'text/html');
+  //   volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+  //   timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+  //   data = {
+  //     volume: volumeLevel,
+  //     positionString: timeString
+  //   };
+  //   $scope.data = data;
+  // });
+
+  getVariables();
+
+  volumeLevel = $scope.data.volume;
 
 
   // Execute POST commands
@@ -91,6 +177,28 @@ angular.module('starter.controllers', [])
     console.log($scope.data.volume);
   };
 
+  // Smart Skip
+  $scope.smartSkip = function() {
+    $http({
+      method: 'POST',
+      url: urlVariables,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    .then(function successCallback(response) {
+      parser = new DOMParser();
+      doc = parser.parseFromString(response.data, 'text/html');
+      timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+      console.log(timeString);
+      secondsString = $filter('timestampToSeconds')(timeString);
+      newSecondsTime = parseInt(secondsString) + parseInt(Settings.settings.smartSkip);
+      newStringTime = $filter('secondsToTimestamp')(newSecondsTime);
+      $scope.sendCommand('-1', 'position', newStringTime);
+    }, function erroCallback(response){
+      console.log(response);
+    });
+  };
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {

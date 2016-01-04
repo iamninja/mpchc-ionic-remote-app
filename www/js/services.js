@@ -4,7 +4,8 @@ angular.module('starter.services', [])
   return {
     settings: {
       ipAddress: '',
-      port: 13579
+      port: 13579,
+      smartSkip: 90,
     }
   };
 })
@@ -24,6 +25,39 @@ angular.module('starter.services', [])
       return JSON.parse($window.localStorage[key] || '{}');
     }
   }
+}])
+
+.factory('GetVariables', ['$http', function($http, $q){
+  return {
+    all: function(callback){
+      $http({
+          method: 'POST',
+          url: urlVariables,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+        .success(function successCallback(response) {
+          parser = new DOMParser();
+          doc = parser.parseFromString(response.data, 'text/html');
+          volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+          timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+          data = {
+            volume: volumeLevel,
+            positionString: timeString
+          };
+          callback;
+          // console.log(timeString);
+          // console.log('Start level: ' + volumeLevel);
+          // $scope.data.volume = parseInt(volumeLevel);
+          // $scope.data.positionString = timeString;
+
+        })
+        .error(function(error) {
+           callback;
+        });
+    }
+  };
 }])
 
 .factory('Chats', function() {
