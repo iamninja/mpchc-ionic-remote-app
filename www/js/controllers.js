@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $http, DevelopApi, Settings, $localstorage, $filter, $timeout, $q, GetVariables) {
+.controller('ControlsCtrl', function($scope, $http, DevelopApi, Settings, $localstorage, $filter) {
   // Settings
   if (typeof $localstorage.get('settings') !== 'undefined') {
     console.log($localstorage.get('settings'));
@@ -44,87 +44,6 @@ angular.module('starter.controllers', [])
       console.log(response);
     });
   };
-
-  // getVariables = function($q) {
-  //   return function() {
-  //     var defer = $q.defer();
-
-  //     $http({
-  //       method: 'POST',
-  //       url: urlVariables,
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded',
-  //       },
-  //     })
-  //     .then(function successCallback(response) {
-  //       parser = new DOMParser();
-  //       doc = parser.parseFromString(response.data, 'text/html');
-  //       volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
-  //       timeString = doc.querySelectorAll('#positionstring')[0].textContent;
-  //       data = {
-  //         volume: volumeLevel,
-  //         positionString: timeString
-  //       };
-  //       defer.resolve(data);
-  //       console.log(timeString);
-  //       console.log('Start level: ' + volumeLevel);
-  //       // $scope.data.volume = parseInt(volumeLevel);
-  //       // $scope.data.positionString = timeString;
-
-  //     }, function erroCallback(response){
-  //       defer.reject(response);
-  //     });
-
-  //     return defer.promise;
-  //   }
-  // };
-
-  // function getVariables($q) {
-  //   return function() {
-  //     // simulated async function
-  //     return $q(function(resolve, reject) {
-  //       return $http({
-  //         method: 'POST',
-  //         url: urlVariables,
-  //         headers: {
-  //           'Content-Type': 'application/x-www-form-urlencoded',
-  //         },
-  //       })
-  //       .then(function successCallback(response) {
-          // parser = new DOMParser();
-          // doc = parser.parseFromString(response.data, 'text/html');
-          // volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
-          // timeString = doc.querySelectorAll('#positionstring')[0].textContent;
-          // data = {
-          //   volume: volumeLevel,
-          //   positionString: timeString
-          // };
-          // $scope.data = data;
-          // resolve(data);
-  //         // console.log(timeString);
-  //         // console.log('Start level: ' + volumeLevel);
-  //         // $scope.data.volume = parseInt(volumeLevel);
-  //         // $scope.data.positionString = timeString;
-
-  //       }, function erroCallback(response){
-  //         reject(response);
-  //       });
-  //     });
-  //   };
-  // };
-
-  // $http.get(urlVariables)
-  // .success(function successCallback(response) {
-  //   parser = new DOMParser();
-  //   doc = parser.parseFromString(response.data, 'text/html');
-  //   volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
-  //   timeString = doc.querySelectorAll('#positionstring')[0].textContent;
-  //   data = {
-  //     volume: volumeLevel,
-  //     positionString: timeString
-  //   };
-  //   $scope.data = data;
-  // });
 
   getVariables();
 
@@ -201,26 +120,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
-
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope, $localstorage, Settings) {
+.controller('SettingsCtrl', function($scope, $localstorage, Settings) {
   if (typeof $localstorage.get('settings') !== 'undefined'){
     Settings.settings = $localstorage.getObject('settings');
   };
