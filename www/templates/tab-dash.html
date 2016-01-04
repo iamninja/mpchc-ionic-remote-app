@@ -19,11 +19,14 @@
       <input type="range" name="volume" min="0" max="100" step="1" ng-model="data.volume" ng-change="updateVolume(data.volume)">
       <i class="icon ion-volume-high" ng-click="increaseVolume(5)"></i>
     </div>
-    <div class="list card">
-      <div class="item item-divider center-text">Subtitles and Audio</div>
-      <div class="item item-body">
-
+    <br />
+      <div class="button-bar">
+        <a class="button" ng-click="sendCommand(955)">Previous Subtitle</a>
+        <a class="button" ng-click="sendCommand(954)">Next Subtitle</a>
       </div>
-    </div>
+      <div class="button-bar">
+        <a class="button" ng-click="sendCommand(953)">Previous Audio</a>
+        <a class="button" ng-click="sendCommand(952)">Next Audio</a>
+      </div>
   </ion-content>
 </ion-view>
