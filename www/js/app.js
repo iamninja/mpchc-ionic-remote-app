@@ -28,6 +28,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   url: 'http://localhost:8100/variables.html'
 })
 
+// Filter for timestamps to seconds
+.filter('timestampToSeconds', function() {
+  return function(input) {
+    numbers = input.match(/\d+/g);
+    seconds = 0;
+    seconds += parseInt(numbers[2]);
+    seconds += (60 * parseInt(numbers[1]));
+    seconds += (60 * 60 * parseInt(numbers[0]));
+    return seconds
+  };
+})
+// Filter for seconds to timestamp
+.filter('secondsToTimestamp', function() {
+  return function(input) {
+    hours = Math.floor(input / (60 * 60));
+    time2 = input % (60 * 60);
+    minutes = Math.floor(time2 / 60);
+    seconds = time2 % 60;
+    return hours + ":" + minutes + ":" + seconds;
+  };
+})
+
 .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
