@@ -132,6 +132,60 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('BrowserCtrl', function($scope, $localstorage, Settings) {
+.controller('BrowserCtrl', function($scope, $localstorage, Settings, $http) {
+  // Retrieve settings
+  if (typeof $localstorage.get('settings') !== 'undefined'){
+    Settings.settings = $localstorage.getObject('settings');
+  };
+  $scope.settings = Settings.settings;
 
+  baseUrl = "http://" + $scope.settings.ipAddress + ":" + $scope.settings.port;
+  browserUrl = baseUrl + "/browser.html"
+
+  // Initiate files object
+  $scope.files = {};
+
+  getFiles = function(path) {
+    path = typeof path !== 'undefined' ? path : '';
+    if (path !== '') {
+      urlWithPath = baseUrl + path;
+    } else {
+      urlWithPath = browserUrl;
+    };
+    $http({
+      method: 'GET',
+      url: urlWithPath,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    .then(function successCallback(response) {
+      parser = new DOMParser();
+      doc = parser.parseFromString(response.data, 'text/html');
+      rows = doc.querySelectorAll('tr');
+      locationStringDirty = rows[0].textContent;
+      locationString = locationStringDirty.substring(locationStringDirty.indexOf(':') + 1 ).trim();
+      $scope.files.files = [];
+      for (var i = 2; i < rows.length; i++) {
+        file = {};
+        fileRow = rows[i].querySelectorAll('td');
+        file.name = fileRow[0].textContent.trim();
+        file.href = fileRow[0].firstElementChild.getAttribute('href');
+        file.type = fileRow[1].textContent.trim();
+        $scope.files.files.push(file);
+      };
+      console.log($scope.files.files)
+      $scope.files.locationString = locationString;
+    }, function erroCallback(response){
+      console.log(response);
+      $scope.files.error = "Could not connect";
+    });
+  };
+
+
+  $scope.clickItem = function(file) {
+    getFiles(file.href);
+  };
+
+  getFiles();
 });

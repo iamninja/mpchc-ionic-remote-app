@@ -1,5 +1,18 @@
 <ion-view view-title="Browser">
 	<ion-content>
+		<div class="list">
+			<div class="item item-divider">
+				{{ files.locationString }}
+			</div>
+		    <div ng-repeat="file in files.files">
+		    	<a class="item button-full" ng-if="file.type == 'Directory'" ng-click="clickItem(file)">
+		    		<strong>{{ file.name }}</strong>
+		    	</a>
+		    	<a class="item" href="" ng-if="file.type != 'Directory'" ng-click="clickItem(file)">
+		    		{{ file.name }}
+		    	</a>
+		    </div>
+		</div>
 
 	</ion-content>
 </ion-view>
