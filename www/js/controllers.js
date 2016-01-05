@@ -130,4 +130,8 @@ angular.module('starter.controllers', [])
     Settings.settings = settings;
     console.log(settings);
   };
+})
+
+.controller('BrowserCtrl', function($scope, $localstorage, Settings) {
+
 });
