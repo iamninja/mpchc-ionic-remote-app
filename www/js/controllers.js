@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('ControlsCtrl', function($scope, $http, DevelopApi, Settings, $localstorage, $filter) {
+.controller('ControlsCtrl', function($scope, $http, GetDetails, Settings, $localstorage, $filter) {
   // Settings
   if (typeof $localstorage.get('settings') !== 'undefined') {
     console.log($localstorage.get('settings'));
@@ -20,6 +20,7 @@ angular.module('starter.controllers', [])
   $scope.data = {
     volume: 0,
     positionString: "",
+    titleAndEpisode: {},
   };
 
   // Get variables
@@ -36,10 +37,13 @@ angular.module('starter.controllers', [])
       doc = parser.parseFromString(response.data, 'text/html');
       volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
       timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+      file = doc.querySelectorAll('#file')[0].textContent;
       console.log(timeString);
       console.log('Start level: ' + volumeLevel);
       $scope.data.volume = parseInt(volumeLevel);
       $scope.data.positionString = timeString;
+      $scope.data.titleAndEpisode = GetDetails.titleAndEpisode(file);
+      console.log($scope.data);
     }, function erroCallback(response){
       console.log(response);
     });
