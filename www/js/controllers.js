@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('ControlsCtrl', function($scope, $http, GetDetails, Settings, $localstorage, $filter) {
+.controller('ControlsCtrl', function($scope, $http, GetDetails, PlayingData, Settings, $localstorage, $filter) {
   // Settings
   if (typeof $localstorage.get('settings') !== 'undefined') {
     console.log($localstorage.get('settings'));
@@ -44,6 +44,7 @@ angular.module('starter.controllers', [])
       $scope.data.positionString = timeString;
       $scope.data.titleAndEpisode = GetDetails.titleAndEpisode(file);
       console.log($scope.data);
+      PlayingData.data.titleAndEpisode = $scope.data.titleAndEpisode;
     }, function erroCallback(response){
       console.log(response);
     });
@@ -69,6 +70,9 @@ angular.module('starter.controllers', [])
       data: 'wm_command=' + command + '&' + extra + '=' + extraValue,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     });
+    // Get variables after each command
+    // GetDetails service gets updated
+    getVariables();
   };
 
   // Volume control
@@ -134,6 +138,27 @@ angular.module('starter.controllers', [])
     Settings.settings = settings;
     console.log(settings);
   };
+})
+
+.controller('NowPlayingCtrl', function($scope, PlayingData, $http){
+  humUrl = 'http://hummingbird.me/api/v1';
+  searchAnimeUrl = '/search/anime';
+
+  refresh = function() {
+    $http({
+      method: 'GET',
+      url: humUrl + searchAnimeUrl + '?query=' + PlayingData.data.titleAndEpisode.title,
+    })
+    .then(function success(response) {
+      console.log('got it');
+      $scope.meta = response.data[0];
+      console.log($scope.meta);
+    }, function failure(response) {
+      console.log(response);
+    });
+  }
+
+  refresh();
 })
 
 .controller('BrowserCtrl', function($scope, $localstorage, Settings, $http) {

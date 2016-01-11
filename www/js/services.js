@@ -10,7 +10,37 @@ angular.module('starter.services', [])
   };
 })
 
-.factory('GetDetails', ['$http', function($http){
+.factory('PlayingData', function(){
+  return {
+    data: {
+      volume: 0,
+      positionString: "",
+      titleAndEpisode: {},
+    },
+  };
+})
+
+.factory('HummingbirdAPI', function($http, PlayingData){
+  return {
+    searchAnimeByName: function() {
+      humUrl = 'http://hummingbird.me/api/v1';
+      searchAnimeUrl = '/search/anime';
+      $http({
+        method: 'GET',
+        url: humUrl + searchAnimeUrl + '?query=' + PlayingData.data.titleAndEpisode.title,
+      })
+      .then(function success(response) {
+        PlayingData.meta = response.data[0];
+      }, function failure(response) {
+        console.log(response);
+      });
+    }
+  };
+})
+
+.factory('GetDetails', function($http, PlayingData, Settings){
+  // data = PlayingData.data;
+
   return {
     titleAndEpisode: function(filename) {
       // Remove parentheses and square brackets
@@ -28,9 +58,43 @@ angular.module('starter.services', [])
         title: title,
         episode: episode,
       };
+    },
+
+    data: {
+
+    },
+
+    getVariables: function() {
+      $http({
+      method: 'POST',
+      url: 'http://' + Settings.settings.ipAddress + ':' + Settings.settings.port + '/variables.html',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      })
+      .then(function successCallback(response) {
+        parser = new DOMParser();
+        doc = parser.parseFromString(response.data, 'text/html');
+        volumeLevel = doc.querySelectorAll('#volumelevel')[0].textContent;
+        timeString = doc.querySelectorAll('#positionstring')[0].textContent;
+        file = doc.querySelectorAll('#file')[0].textContent;
+        console.log(timeString);
+        console.log('Start level: ' + volumeLevel);
+        $scope.data.volume = parseInt(volumeLevel);
+        data.volume = parseInt(volumeLevel);
+        $scope.data.positionString = timeString;
+        data.positionString = timeString;
+        $scope.data.titleAndEpisode = GetDetails.titleAndEpisode(file);
+        data.titleAndEpisode = GetDetails.titleAndEpisode(file);
+        // console.log($scope.data);
+        PlayingData.data = $scope.data;
+        self.data.titleAndEpisode = data.titleAndEpisode;
+      }, function erroCallback(response){
+        console.log(response);
+      });
     }
   }
-}])
+})
 
 .factory('$localstorage', ['$window', function($window) {
   return {
