@@ -76,3 +76,17 @@
 	height: 16%;
 	background-color: brown;
 }
+
+/* Now playing */
+.cover-image {
+  float: left;
+  width: 33%;
+  margin-right: 10px;
+  -moz-animation-delay: 1s;
+  -webkit-animation-delay: 1s;
+}
+
+.synopsis {
+  text-align: justify;
+  text-justify: inter-word;
+}

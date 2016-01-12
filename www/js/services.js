@@ -11,12 +11,34 @@ angular.module('starter.services', [])
 })
 
 .factory('PlayingData', function(){
-  return {
-    data: {
-      volume: 0,
-      positionString: "",
-      titleAndEpisode: {},
+  var data = {
+    volume: 0,
+    positionString: "",
+    titleAndEpisode: {
+      title: "",
+      episode: 0,
     },
+  };
+
+  return {
+    setTitleAndEpisode: function(titleAndEpisode) {
+      data.titleAndEpisode = titleAndEpisode;
+    },
+    setVolume: function(volumeLevel) {
+      data.volume = volumeLevel;
+    },
+    setPositionString: function(positionString) {
+      data.positionString = positionString;
+    },
+    getTitleAndEpisode: function() {
+      return data.titleAndEpisode;
+    },
+    getVolume: function() {
+      return data.volume;
+    },
+    getPositionString: function() {
+      return data.positionString;
+    }
   };
 })
 
@@ -54,10 +76,13 @@ angular.module('starter.services', [])
       // Get episode
       episode = titleAndEpisode.substr(titleAndEpisode.lastIndexOf('-') + 1, titleAndEpisode.length).trim() || "";
 
-      return {
+      data = {
         title: title,
         episode: episode,
       };
+
+      return data;
+      console.log("tile get");
     },
 
     data: {

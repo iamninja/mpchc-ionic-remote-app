@@ -17,11 +17,14 @@ angular.module('starter.controllers', [])
 
   console.log(baseUrl);
 
-  $scope.data = {
-    volume: 0,
-    positionString: "",
-    titleAndEpisode: {},
-  };
+  // $scope.data = {
+  //   volume: 0,
+  //   positionString: "",
+  //   titleAndEpisode: {},
+  // };
+  $scope.volume = PlayingData.getVolume();
+  $scope.positionString = PlayingData.getPositionString();
+  // $scope.titleAndEpisode = PlayingData.getTitleAndEpisode();
 
   // Get variables
   getVariables = function() {
@@ -40,19 +43,21 @@ angular.module('starter.controllers', [])
       file = doc.querySelectorAll('#file')[0].textContent;
       console.log(timeString);
       console.log('Start level: ' + volumeLevel);
-      $scope.data.volume = parseInt(volumeLevel);
-      $scope.data.positionString = timeString;
-      $scope.data.titleAndEpisode = GetDetails.titleAndEpisode(file);
-      console.log($scope.data);
-      PlayingData.data.titleAndEpisode = $scope.data.titleAndEpisode;
+      $scope.volume = volumeLevel;
+      PlayingData.setVolume(parseInt(volumeLevel));
+      PlayingData.setPositionString(timeString);
+      PlayingData.setTitleAndEpisode(GetDetails.titleAndEpisode(file));
+      // $scope.data.titleAndEpisode = GetDetails.titleAndEpisode(file);
+      // console.log($scope.data);
+      // PlayingData.data.titleAndEpisode = $scope.data.titleAndEpisode;
     }, function erroCallback(response){
       console.log(response);
     });
+    $scope.volume = PlayingData.getVolume();
   };
 
   getVariables();
-
-  volumeLevel = $scope.data.volume;
+  // volumeLevel = $scope.volume;
 
 
   // Execute POST commands
@@ -77,23 +82,23 @@ angular.module('starter.controllers', [])
 
   // Volume control
   $scope.increaseVolume = function(value) {
-    if (($scope.data.volume + value) > 100) {
+    if (($scope.volume + value) > 100) {
       return;
     };
-    $scope.data.volume = $scope.data.volume + value;
-    $scope.updateVolume($scope.data.volume);
-    console.log($scope.data.volume);
+    $scope.volume = $scope.volume + value;
+    $scope.updateVolume($scope.volume);
+    console.log($scope.volume);
   };
   $scope.decreaseVolume = function(value) {
-    if (($scope.data.volume - value) < 0) {
+    if (($scope.volume - value) < 0) {
       return;
     };
-    $scope.data.volume = $scope.data.volume - value;
-    $scope.updateVolume($scope.data.volume);
-    console.log($scope.data.volume);
+    $scope.volume = $scope.volume - value;
+    $scope.updateVolume($scope.volume);
+    console.log($scope.volume);
   };
   $scope.updateVolume = function(volume) {
-    $scope.data.volume = parseInt(volume);
+    $scope.volume = parseInt(volume);
     $http({
       method: 'POST',
       url: urlCommand,
@@ -101,7 +106,7 @@ angular.module('starter.controllers', [])
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     });
     console.log(volume);
-    console.log($scope.data.volume);
+    console.log($scope.volume);
   };
 
   // Smart Skip
@@ -143,11 +148,18 @@ angular.module('starter.controllers', [])
 .controller('NowPlayingCtrl', function($scope, PlayingData, $http){
   humUrl = 'http://hummingbird.me/api/v1';
   searchAnimeUrl = '/search/anime';
+  $scope.$watch(function() {
+    return PlayingData.getTitleAndEpisode();
+  }, function(newData, oldData) {
+    $scope.titleAndEpisode = newData;
+    console.log('watched');
+    getMetadata(newData);
+  });
 
-  refresh = function() {
+  getMetadata = function(titleAndEpisode) {
     $http({
       method: 'GET',
-      url: humUrl + searchAnimeUrl + '?query=' + PlayingData.data.titleAndEpisode.title,
+      url: humUrl + searchAnimeUrl + '?query=' + $scope.titleAndEpisode.title,
     })
     .then(function success(response) {
       console.log('got it');
@@ -158,7 +170,6 @@ angular.module('starter.controllers', [])
     });
   }
 
-  refresh();
 })
 
 .controller('BrowserCtrl', function($scope, $localstorage, Settings, $http) {

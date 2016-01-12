@@ -1,8 +1,30 @@
 <ion-view view-title="Now Playing">
 	<ion-content>
-    <button class="button button-full button-positive" ng-click="refresh()">
+    <!-- <button class="button button-full button-positive" ng-click="getMetadata(titleAndEpisode)">
       Refresh
-    </button>
-		{{ meta.title }}
+    </button> -->
+		<!-- {{ titleAndEpisode.title }}
+    <br>
+    {{ titleAndEpisode.episode }} -->
+    <div ng-if="titleAndEpisode.title">
+      <img ng-src="{{ meta.cover_image }}" class="thumbnail animated cover-image" alt="cover_image">
+      <h4>{{ meta.title }}</h4>
+      <span><strong>Episode: </strong>{{ titleAndEpisode.episode }}/{{ meta.episode_count }}</span>
+      <br>
+      <span>
+        <strong>Genres: </strong>
+        <span ng-repeat="genre in meta.genres">{{ genre.name }}<span ng-if="!$last">, </span></span>
+      </span>
+      <br>
+      <span><strong>Status: </strong>{{ meta.status }}</span>
+      <br>
+      <span><strong>Year: </strong>{{ meta.started_airing | date: 'yyyy' }}</span>
+      <p class="synopsis"><strong>Synopsis: </strong>{{ meta.synopsis }}</p>
+    </div>
+
+    <div ng-if="!titleAndEpisode.title">
+      <h3>No file loaded</h3>
+    </div>
+
 	</ion-content>
 </ion-view>
